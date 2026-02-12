@@ -10,7 +10,7 @@
 #include "Timer.h"
 #include "Utils.h"
 
-// framework works for XOR problem, estimating with high certainty (>98%)
+
 
 int main() {
     MSE mse;
@@ -38,27 +38,27 @@ int main() {
     int total_samples = 60000;
 
     // //BATCH END
-    // for (int epoch = 0; epoch < 30; ++epoch) {
-    //
-    //     for (int i = 0; i < total_samples; i += batch_size) {
-    //         Matrix batch_input = Utils::get_batch(X_train, i, batch_size);
-    //         Matrix batch_target = Utils::get_batch(Y_train, i, batch_size);
-    //         nn.train(batch_input,batch_target, learning_rate);
-    //     }
-    //
-    //     if (epoch == 7 || epoch == 20)   learning_rate *= 0.1;
-    //     std::cout << "EPOCH: " << epoch << " TOTAL COST: " << mse.cross_entropy(nn.predict(X_train), Y_train) << std::endl;;
-    //
-    // }
+    for (int epoch = 0; epoch < 10; ++epoch) {
+
+        for (int i = 0; i < total_samples; i += batch_size) {
+            Matrix batch_input = Utils::get_batch(X_train, i, batch_size);
+            Matrix batch_target = Utils::get_batch(Y_train, i, batch_size);
+            nn.train(batch_input,batch_target, learning_rate);
+        }
+
+        if (epoch == 7 || epoch == 20)   learning_rate *= 0.1;
+        std::cout << "EPOCH: " << epoch << " TOTAL COST: " << mse.cross_entropy(nn.predict(X_train), Y_train) << std::endl;;
+
+    }
 
 
     // l1->save_weights("l1");
     // l2->save_weights("l2");
     // l3->save_weights("l3");
     //
-    l1->load_weights("l1");
-    l2->load_weights("l2");
-    l3->load_weights("l3");
+    // l1->load_weights("l1");
+    // l2->load_weights("l2");
+    // l3->load_weights("l3");
 
     IDXReader labels_f, img_f;
     std::vector<float> test_labels = labels_f.load_mnist("t10k-labels.idx1-ubyte");
@@ -70,15 +70,12 @@ int main() {
         int best_digit = 0;
         double highest_prob = -1.0;
         for (int j = 0; j < 10; j++) {
-            // std::cout << j << ":" << prediction(i,j) << " ";
             double val = prediction(i, j);
             if (val > highest_prob) {
                 highest_prob = val;
                 best_digit = j;
             }
         }
-        // std::cout << std::endl << "TARGET VALUE: " << test_labels[i];
-        // std::cout <<  " PREDICTION: " << best_digit << (best_digit == test_labels[i] ? "(True)" : "(False)") << std::endl << std::endl;
         if (best_digit == test_labels[i]) ++counter;
     }
     std::cout << "Success rate: " << (counter/10000.0)*100.0<< "% ";

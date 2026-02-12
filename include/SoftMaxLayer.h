@@ -7,7 +7,7 @@
 #include "Layer.h"
 
 
-class SoftMaxLayer : public Layer{
+class SoftMaxLayer final : public Layer{
 public:
     SoftMaxLayer(const std::function<Matrix(const Matrix&)>& activation_func,
                     const std::function<double(double,double)>& activation_func_derivative);

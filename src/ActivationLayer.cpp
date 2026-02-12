@@ -17,7 +17,7 @@ Matrix ActivationLayer::forward(const Matrix &input) {
 }
 
 Matrix ActivationLayer::backward(const Matrix &output_gradient, double learning_rate) {
-    Matrix derivative = input_cache.apply(activation_func_derivative);
+    const Matrix derivative = input_cache.apply(activation_func_derivative);
     return output_gradient.hadamard_prod(derivative);
 }
 

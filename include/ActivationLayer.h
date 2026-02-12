@@ -7,7 +7,7 @@
 #include "Layer.h"
 
 
-class ActivationLayer : public Layer{
+class ActivationLayer final : public Layer{
 public:
     ActivationLayer(const std::function<double(double)>& activation_func,
                     const std::function<double(double)>& activation_func_derivative);

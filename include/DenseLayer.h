@@ -7,21 +7,19 @@
 #include "Layer.h"
 
 
-class DenseLayer : public Layer{
+class DenseLayer final : public Layer{
 public:
     DenseLayer(int input_size, int output_size);
 
     Matrix forward(const Matrix &input) override;
     Matrix backward(const Matrix &output_gradient, double learning_rate) override;
     void save_weights(const std::string& filename);
-    void load_weights(const std::string filename);
+    void load_weights(std::string filename);
 
 private:
     Matrix input_cache;
     Matrix bias;
     Matrix weights;
-    Matrix velocity_weights;
-    Matrix velocity_bias;
 };
 
 

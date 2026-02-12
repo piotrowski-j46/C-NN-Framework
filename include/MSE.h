@@ -7,7 +7,7 @@
 #include "Loss.h"
 
 
-class MSE : public Loss{
+class MSE final : public Loss{
 public:
     double compute_cost(const Matrix &predicted, const Matrix &target) override;
     double cross_entropy(const Matrix &predicted, const Matrix& target) override;

@@ -14,8 +14,8 @@ class NeuralNetwork {
 public:
 
     void add_layer(Layer* layer);
-    Matrix predict(Matrix input);
-    void train(Matrix& input, const Matrix& target_values, const double learning_rate);
+    Matrix predict(Matrix input) const;
+    void train(const Matrix& input, const Matrix& target_values, const double learning_rate);
 private:
     MSE mse;
     std::pmr::vector<std::unique_ptr<Layer>> layers;

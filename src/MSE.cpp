@@ -19,16 +19,8 @@ Matrix MSE::compute_gradient(const Matrix &predicted, const Matrix &target) {
 }
 
 double MSE::cross_entropy(const Matrix &predicted, const Matrix &target) {
-    // for (int i = 0; i < 10; ++i) {
-    //     std::cout << predicted[i] << " ";
-    // }
-    // std::cout << std::endl;
-    // std::cout << std::endl;
-    // std::cout << std::endl;
-    // std::cout << std::endl;
-    // std::cout << std::endl;
-    Matrix log_mul = predicted.apply(Utils::log).hadamard_prod(target);
-    double cost = -1*log_mul.sum();
+    const Matrix log_mul = predicted.apply(Utils::log).hadamard_prod(target);
+    const double cost = -1*log_mul.sum();
     return cost;
 }
 

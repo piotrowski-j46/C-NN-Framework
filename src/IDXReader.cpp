@@ -11,6 +11,10 @@
 #include "Utils.h"
 
 std::vector<float> IDXReader::load_mnist(const std::string& filename) {
+    /*
+     * Some indices have to be skipped since IDX data has some control values.
+     * See https://yann.lecun.org/exdb/mnist/index.html?utm_source=chatgpt.com for more (expired certificate)
+     */
     int skipped_indices = 0;
     const std::filesystem::path path = Utils::get_path("Data", filename);
     std::ifstream MNISTdata(path, std::ios::binary | std::ios::ate);
@@ -27,7 +31,7 @@ std::vector<float> IDXReader::load_mnist(const std::string& filename) {
         std::cerr << "Unkown filetype! " << std::endl;
         return std::vector<float>{};
     }
-    std::streamsize size = MNISTdata.tellg();
+    const std::streamsize size = MNISTdata.tellg();
     data.reserve(size);
     MNISTdata.seekg(0, std::ios::beg);
 
