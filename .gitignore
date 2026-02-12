@@ -1,0 +1,13 @@
+*.exe
+*.out
+*.app
+bin/
+
+*.o
+*.obj
+.vscode/
+.idea/
+*.swp
+
+data/*.ubyte
+data/*.gz
