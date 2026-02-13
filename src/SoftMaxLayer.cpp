@@ -5,9 +5,8 @@
 #include "SoftMaxLayer.h"
 
 
-SoftMaxLayer::SoftMaxLayer(const std::function<Matrix(const Matrix&)> &activation_func,
-    const std::function<double(double, double)> &activation_func_derivative): input_cache(Matrix(1,1)),
-        activation_func(activation_func), activation_func_derivative(activation_func_derivative) {
+SoftMaxLayer::SoftMaxLayer(const std::function<Matrix(const Matrix&)> &activation_func): input_cache(1,1),
+activation_func(activation_func){
 }
 
 
@@ -16,6 +15,6 @@ Matrix SoftMaxLayer::forward(const Matrix &input) {
     return input.apply(activation_func);
 }
 
-Matrix SoftMaxLayer::backward(const Matrix &output_gradient, double learning_rate) {
+Matrix SoftMaxLayer::backward(const Matrix &output_gradient, float learning_rate) {
     return output_gradient;
 }

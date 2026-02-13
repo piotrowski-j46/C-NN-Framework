@@ -39,3 +39,5 @@ The training loop can be split into three essential parts:
 - **Native IDX Parser** - Reads MNIST database files directly without external dependencies.
 - **Model Serialization** - Save and load trained weights/biases to reuse the model without retraining.
 - **Math Tools** - Includes Z-Score Normalization and One-Hot Encoding for data preprocessing.
+
+# Build 

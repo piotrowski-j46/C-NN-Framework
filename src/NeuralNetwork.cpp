@@ -8,9 +8,14 @@
 
 #include "Timer.h"
 
-void NeuralNetwork::add_layer(Layer* layer) {
-    layers.push_back(std::unique_ptr<Layer> (layer));
+void NeuralNetwork::add_layer(std::unique_ptr<Layer> &layer) {
+    layers.push_back(std::move(layer));
 }
+
+void NeuralNetwork::set_loss(std::unique_ptr<Loss> &loss) {
+    loss_function = std::move(loss);
+}
+
 
 Matrix NeuralNetwork::predict(Matrix input) const {
     Matrix result = std::move(input);
@@ -20,14 +25,14 @@ Matrix NeuralNetwork::predict(Matrix input) const {
     return result;
 }
 
-void NeuralNetwork::train(const Matrix& input, const Matrix& target_values,const double learning_rate) {
+void NeuralNetwork::train(const Matrix& input, const Matrix& target_values,const float learning_rate) {
     Matrix activation = input;
 
     for (const auto& layer : layers) {
         activation = layer->forward(activation);
     }
 
-    Matrix grad = mse.compute_gradient(activation, target_values);
+    Matrix grad = loss_function->compute_gradient(activation, target_values);
 
     for (auto it = layers.rbegin(); it != layers.rend(); ++it) {
         grad = (*it)->backward(grad, learning_rate);

@@ -12,9 +12,9 @@ public:
     DenseLayer(int input_size, int output_size);
 
     Matrix forward(const Matrix &input) override;
-    Matrix backward(const Matrix &output_gradient, double learning_rate) override;
+    Matrix backward(const Matrix &output_gradient, float learning_rate) override;
     void save_weights(const std::string& filename);
-    void load_weights(std::string filename);
+    void load_weights(const std::string &filename);
 
 private:
     Matrix input_cache;

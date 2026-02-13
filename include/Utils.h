@@ -50,11 +50,11 @@ namespace Utils {
         return std::log(x + 1e-9);
     }
 
-    inline float softmax_derivative(const float x, const float y) {
+    inline float cross_entropy_gradient(const float x, const float y) {
         return x - y;
     }
 
-    inline Matrix get_batch(Matrix& samples, int start, int batch_size) {
+    inline Matrix get_batch(Matrix& samples, const int start, const int batch_size) {
         const int cols = samples.get_columns();
         const int rows_to_take = std::min(batch_size, samples.get_rows() - start);
 
@@ -91,6 +91,15 @@ namespace Utils {
         }
         throw std::runtime_error("CRITICAL ERROR: Could not find: '"  + directory  + "\\" + filename +
                              "' in " + std::filesystem::current_path().string() + " or its parents.");
+    }
+
+    /*
+     * Since the sci-kit type scaler isn't implemented mean and standard deviation must be reset before using
+     * Z-score again to avoid scaling with improper values and possible malfunctions
+     */
+    inline void reset_normalization() {
+        mean = 0;
+        std = 0;
     }
 
 }

@@ -9,16 +9,16 @@
 
 class ActivationLayer final : public Layer{
 public:
-    ActivationLayer(const std::function<double(double)>& activation_func,
-                    const std::function<double(double)>& activation_func_derivative);
+    ActivationLayer(const std::function<float(float)>& activation_func,
+                    const std::function<float(float)>& activation_func_derivative);
 
 
     Matrix forward(const Matrix &input) override;
-    Matrix backward(const Matrix &output_gradient, double learning_rate) override;
+    Matrix backward(const Matrix &output_gradient, float learning_rate) override;
 private:
     Matrix input_cache;
-    std::function<double(double)> activation_func;
-    std::function<double(double)> activation_func_derivative;
+    std::function<float(float)> activation_func;
+    std::function<float(float)> activation_func_derivative;
 };
 
 

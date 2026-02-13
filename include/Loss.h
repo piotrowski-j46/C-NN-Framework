@@ -6,12 +6,12 @@
 #define MICRO_NN_FRAMEWORK_LOSS_H
 #include "Matrix.h"
 
-#endif //MICRO_NN_FRAMEWORK_LOSS_H
 
 class Loss {
 public:
     virtual ~Loss() = default;
-    virtual double compute_cost(const Matrix& predicted, const Matrix& target) = 0;
-    virtual double cross_entropy(const Matrix &predicted, const Matrix& target) = 0;
+    virtual float compute_cost(const Matrix& predicted, const Matrix& target) = 0;
     virtual Matrix compute_gradient(const Matrix& predicted, const Matrix& target) = 0;
 };
+
+#endif //MICRO_NN_FRAMEWORK_LOSS_H

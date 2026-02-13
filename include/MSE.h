@@ -9,8 +9,7 @@
 
 class MSE final : public Loss{
 public:
-    double compute_cost(const Matrix &predicted, const Matrix &target) override;
-    double cross_entropy(const Matrix &predicted, const Matrix& target) override;
+    float compute_cost(const Matrix &predicted, const Matrix &target) override;
     Matrix compute_gradient(const Matrix &predicted, const Matrix &target) override;
 };
 

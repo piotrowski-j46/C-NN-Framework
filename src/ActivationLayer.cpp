@@ -5,7 +5,8 @@
 #include "ActivationLayer.h"
 
 
-ActivationLayer::ActivationLayer(const std::function<double(double)>& activation_func,const std::function<double(double)>& activation_func_derivative) : input_cache(Matrix(1,1)),
+ActivationLayer::ActivationLayer(const std::function<float(float)>& activation_func,
+    const std::function<float(float)>& activation_func_derivative) : input_cache(Matrix(1,1)),
     activation_func(activation_func), activation_func_derivative(activation_func_derivative) {
 }
 
@@ -16,7 +17,7 @@ Matrix ActivationLayer::forward(const Matrix &input) {
     return input.apply(activation_func);
 }
 
-Matrix ActivationLayer::backward(const Matrix &output_gradient, double learning_rate) {
+Matrix ActivationLayer::backward(const Matrix &output_gradient, float learning_rate) {
     const Matrix derivative = input_cache.apply(activation_func_derivative);
     return output_gradient.hadamard_prod(derivative);
 }

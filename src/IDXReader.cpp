@@ -15,35 +15,44 @@ std::vector<float> IDXReader::load_mnist(const std::string& filename) {
      * Some indices have to be skipped since IDX data has some control values.
      * See https://yann.lecun.org/exdb/mnist/index.html?utm_source=chatgpt.com for more (expired certificate)
      */
-    int skipped_indices = 0;
     const std::filesystem::path path = Utils::get_path("Data", filename);
-    std::ifstream MNISTdata(path, std::ios::binary | std::ios::ate);
+    std::ifstream file(path, std::ios::binary | std::ios::ate);
 
-    if (!MNISTdata.is_open()) {
+    if (!file.is_open()) {
         std::cerr << "File can't be opened!" << std::endl;
         return std::vector<float>{};
     }
 
-    const std::regex idx1("((\\.+idx1-ubyte))"), idx3("(\\.+idx3-ubyte)");
-    if (std::regex_search(filename, idx1)) skipped_indices = 8;
-    else if (std::regex_search(filename, idx3)) skipped_indices = 16;
+    int header_size = 0;
+
+    if (filename.find("idx1-ubyte") != std::string::npos) header_size = 8;
+    else if (filename.find("idx3-ubyte") != std::string::npos) header_size = 16;
     else {
-        std::cerr << "Unkown filetype! " << std::endl;
+        std::cerr << "Unknown filetype! " << std::endl;
         return std::vector<float>{};
     }
-    const std::streamsize size = MNISTdata.tellg();
-    data.reserve(size);
-    MNISTdata.seekg(0, std::ios::beg);
 
-    MNISTdata.seekg(skipped_indices);
+    const std::streamsize size = file.tellg();
+    const std::streamsize data_size = size - header_size;
 
-    unsigned char pixel;
-    int counter = 0;
-    while (MNISTdata.read((char*)&pixel, 1)) {
-        if (skipped_indices == 16) data.push_back(pixel); // - 0.5f ??
-        else data.push_back(pixel);
-        ++counter;
+    std::vector<unsigned char> raw_buffer(data_size);
+
+    file.seekg(0, std::ios::beg);
+
+    file.seekg(header_size);
+
+    if (!file.read(reinterpret_cast<char*>(raw_buffer.data()), data_size)) {
+        std::cerr << "Error reading data!" << std::endl;
+        return {};
     }
-    return data;
+
+
+    std::vector<float> result;
+    result.reserve(size);
+
+    for (const unsigned char byte : raw_buffer) {
+        result.push_back(byte);
+    }
+    return result;
 }
 

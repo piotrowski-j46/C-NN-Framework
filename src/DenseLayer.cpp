@@ -14,18 +14,18 @@
 
 
 
-// Bias initialization according to andriej karpathy x:y pos/neg ratio
-DenseLayer::DenseLayer(const int input_size, const int output_size) : input_cache(Matrix(1, 1)),
-                                                                      bias(Matrix(1, output_size, 0.1)),
-                                                                      weights(Matrix(1, 1)) {
+// Bias initialization according to Andrej Karpathy x:y pos/neg ratio
+DenseLayer::DenseLayer(const int input_size, const int output_size) : input_cache(1, 1),
+                                                                      bias(1, output_size, 0.1),
+                                                                      weights(Matrix::random(input_size, output_size,
+                                                                          -std::sqrt(6.0f / input_size),
+                                                                          std::sqrt(6.0f / input_size))) {
     /*
      * 6.0 is used in numerator as get_random() method uses uniform distribution instead of normal distribution.
      * The variance for uniform distribution is 2/3n while for normal distribution it's 2/n.
      * By using 6.0 in numerator we get the following formula: 6/3n = 2/n, which is perfectly aligned with normal distribution
      * and allows for perfect compatibility with he initialization required for ReLu.
      */
-    const float limit = std::sqrt(6.0 / input_size);
-    weights = Matrix::random(input_size, output_size, -1 * limit, limit);
 }
 
 Matrix DenseLayer::forward(const Matrix &input) {
@@ -33,7 +33,7 @@ Matrix DenseLayer::forward(const Matrix &input) {
     return input * weights + bias;
 }
 
-Matrix DenseLayer::backward(const Matrix &output_gradient, double learning_rate) {
+Matrix DenseLayer::backward(const Matrix &output_gradient, const float learning_rate) {
     const Matrix input_t = input_cache.transpose();
     const Matrix weights_t = weights.transpose();
 
@@ -67,10 +67,11 @@ void DenseLayer::save_weights(const std::string& filename) {
 
 }
 
-void DenseLayer::load_weights(std::string filename) {
+void DenseLayer::load_weights(const std::string &filename) {
 
     std::vector<float>* loc = nullptr;
-    int weights_size = weights.get_raw_data().size(), bias_size = bias.get_raw_data().size();
+    const int weights_size = weights.get_raw_data().size();
+    const int bias_size = bias.get_raw_data().size();
     const std::filesystem::path path = Utils::get_path("weights", filename);
     const std::regex bias_reg("BIAS"), weights_reg("WEIGHTS");
     std::ifstream load(path);

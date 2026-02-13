@@ -5,7 +5,9 @@
 #ifndef MICRO_NN_FRAMEWORK_TIMER_H
 #define MICRO_NN_FRAMEWORK_TIMER_H
 #include <chrono>
-
+/*
+ * Helper class for performance measurement
+ */
 class Timer {
 public:
 

@@ -12,7 +12,7 @@ public:
     virtual ~Layer() = default;
 
     virtual Matrix forward(const Matrix& input) = 0;
-    virtual Matrix backward(const Matrix& output_gradient, double learning_rate) = 0;
+    virtual Matrix backward(const Matrix& output_gradient, float learning_rate) = 0;
 };
 
 

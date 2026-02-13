@@ -13,12 +13,13 @@
 class NeuralNetwork {
 public:
 
-    void add_layer(Layer* layer);
+    void add_layer(std::unique_ptr<Layer> &layer);
+    void set_loss(std::unique_ptr<Loss> &loss);
     Matrix predict(Matrix input) const;
-    void train(const Matrix& input, const Matrix& target_values, const double learning_rate);
+    void train(const Matrix& input, const Matrix& target_values, float learning_rate);
 private:
-    MSE mse;
-    std::pmr::vector<std::unique_ptr<Layer>> layers;
+    std::unique_ptr<Loss> loss_function;
+    std::vector<std::unique_ptr<Layer>> layers;
 };
 
 

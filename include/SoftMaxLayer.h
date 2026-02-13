@@ -9,15 +9,13 @@
 
 class SoftMaxLayer final : public Layer{
 public:
-    SoftMaxLayer(const std::function<Matrix(const Matrix&)>& activation_func,
-                    const std::function<double(double,double)>& activation_func_derivative);
+    SoftMaxLayer(const std::function<Matrix(const Matrix&)>& activation_func);
 
     Matrix forward(const Matrix &input) override;
-    Matrix backward(const Matrix &output_gradient, double learning_rate) override;
+    Matrix backward(const Matrix &output_gradient, float learning_rate) override;
 private:
     Matrix input_cache;
-    std::function<Matrix(Matrix &)> activation_func;
-    std::function<double(double, double)> activation_func_derivative;
+    std::function<Matrix(const Matrix &)> activation_func;
 };
 
 

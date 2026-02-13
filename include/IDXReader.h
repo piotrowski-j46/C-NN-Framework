@@ -9,9 +9,7 @@
 
 class IDXReader {
 public:
-    std::vector<float> load_mnist(const std::string& filename);
-private:
-    std::vector<float> data;
+    static std::vector<float> load_mnist(const std::string& filename);
 };
 
 

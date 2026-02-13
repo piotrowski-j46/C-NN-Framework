@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "ActivationLayer.h"
+#include "CrossEntropy.h"
 #include "DenseLayer.h"
 #include "IDXReader.h"
 #include "Matrix.h"
@@ -13,8 +14,13 @@
 
 
 int main() {
-    MSE mse;
+    CrossEntropy ce;
+    std::unique_ptr<Loss> mse = std::make_unique<MSE>();
     NeuralNetwork nn;
+    /*
+     * MSE is set as loss for this network, as we only need gradient for dense layers and relu activation layers
+     */
+    nn.set_loss(mse);
     IDXReader train;
     IDXReader test;
 
@@ -22,17 +28,20 @@ int main() {
     Matrix X_train {60000,784, train.load_mnist("train-images.idx3-ubyte")};
     Matrix Y_train = Utils::one_hot_encode(raw_labels,10);
     X_train = Utils::z_score_normalization(X_train);
-    DenseLayer *l1 = new DenseLayer(784,128);
-    DenseLayer *l2 = new DenseLayer(128,32);
-    DenseLayer *l3 = new DenseLayer(32,10);
-    nn.add_layer(l1);
-    nn.add_layer(new ActivationLayer(Utils::relu, Utils::relu_derivative));
-    nn.add_layer(l2);
-    nn.add_layer(new ActivationLayer(Utils::relu, Utils::relu_derivative));
-    nn.add_layer(l3);
-    nn.add_layer(new SoftMaxLayer(Matrix::softmax, Utils::softmax_derivative));
+    std::unique_ptr<Layer> dense_l1 = std::make_unique<DenseLayer>(784,128);
+    std::unique_ptr<Layer> dense_l2 = std::make_unique<DenseLayer>(128,32);
+    std::unique_ptr<Layer> dense_l3= std::make_unique<DenseLayer>(32,10);
+    std::unique_ptr<Layer> activation_l1 = std::make_unique<ActivationLayer>(Utils::relu, Utils::relu_derivative);
+    std::unique_ptr<Layer> activation_l2 = std::make_unique<ActivationLayer>(Utils::relu, Utils::relu_derivative);
+    std::unique_ptr<Layer> activation_l3 = std::make_unique<SoftMaxLayer>(Matrix::softmax);
+    nn.add_layer(dense_l1);
+    nn.add_layer(activation_l1);
+    nn.add_layer(dense_l2);
+    nn.add_layer(activation_l2);
+    nn.add_layer(dense_l3);
+    nn.add_layer(activation_l3);
 
-    // // //BATCH START
+    // // // //BATCH START
     double learning_rate = 0.08;
     int batch_size = 32;
     int total_samples = 60000;
@@ -47,19 +56,19 @@ int main() {
         }
 
         if (epoch == 7 || epoch == 20)   learning_rate *= 0.1;
-        std::cout << "EPOCH: " << epoch << " TOTAL COST: " << mse.cross_entropy(nn.predict(X_train), Y_train) << std::endl;;
+        std::cout << "EPOCH: " << (epoch+1) << " TOTAL COST: " << ce.compute_cost(nn.predict(X_train), Y_train) << std::endl;;
 
     }
 
 
-    // l1->save_weights("l1");
-    // l2->save_weights("l2");
-    // l3->save_weights("l3");
+    // // l1->save_weights("l1");
+    // // l2->save_weights("l2");
+    // // l3->save_weights("l3");
+    // //
+    // // l1->load_weights("l1");
+    // // l2->load_weights("l2");
+    // // l3->load_weights("l3");
     //
-    // l1->load_weights("l1");
-    // l2->load_weights("l2");
-    // l3->load_weights("l3");
-
     IDXReader labels_f, img_f;
     std::vector<float> test_labels = labels_f.load_mnist("t10k-labels.idx1-ubyte");
     Matrix X_test {10000,784, img_f.load_mnist("t10k-images.idx3-ubyte")};
@@ -79,6 +88,4 @@ int main() {
         if (best_digit == test_labels[i]) ++counter;
     }
     std::cout << "Success rate: " << (counter/10000.0)*100.0<< "% ";
-
-
 }
