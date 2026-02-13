@@ -1,5 +1,5 @@
 # C-NN-Framework
-![C++](https://img.shields.io/badge/C++-17-blue.svg?style=flat&logo=c%2B%2B)
+![C++](https://img.shields.io/badge/C++-20-%2300599C?logo=cplusplus)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 ![Status](https://img.shields.io/badge/Status-Finished-success)
 ![Accuracy](https://img.shields.io/badge/MNIST%20Accuracy-97.97%25-brightgreen)
@@ -10,12 +10,12 @@ My main goal for this project was to obtain a deeper understanding of how neural
 # Results (MNIST)
 By using the framework, I was able to achieve **97.97% accuracy** on the MNIST dataset (10,000 images), which borders the theoretical limit of architectures without convolutional layers.
 
-| Metrics | Value |
-| :--- | :--- |
+| Metrics | Value                  |
+| :--- |:-----------------------|
 | **Architecture** | 784 -> 128 -> 32 -> 10 |
-| **Epochs** | 30 |
-| **Final cost (CE)** | ~119.9 |
-| **Test accuracy** | **~97.97%** |
+| **Epochs** | 10                     |
+| **Final cost (CE)** | ~0.006                 |
+| **Test accuracy** | **~98.00%**            |
 
 ### Cost over epochs:
 ![Cost decrease](https://github.com/piotrowski-j46/C-NN-Framework/blob/main/Assets/cost_cropped.gif?raw=true)
@@ -41,3 +41,44 @@ The training loop can be split into three essential parts:
 - **Math Tools** - Includes Z-Score Normalization and One-Hot Encoding for data preprocessing.
 
 # Build 
+### Prerequisites
+* **C++ Compiler** supporting C++20 (GCC, Clang, or MSVC)
+* **CMake** (version 3.10+)
+
+### Compilation
+The project uses CMake for cross-platform compatibility.
+
+1. Create a build directory:
+   ```bash
+   mkdir build
+   cd build
+   
+2. Generate build files:
+   ```
+   cmake ..
+
+3. Compile the project (Release mode for maximum performance):
+   ```
+   cmake --build . --config Release
+
+# Usage
+Run the executable from the terminal. The framework supports two modes: train and test.
+
+1. Train Model
+   Trains the network on the MNIST dataset and saves the model to mnist_model.
+
+   ```
+   # Linux / macOS
+   ./NeuralNet train
+
+   # Windows
+   .\NeuralNet.exe train
+2. Test Accuracy
+   Loads the saved model and evaluates performance on the 10k test images.
+
+   ```
+   # Linux / macOS
+   ./NeuralNet test
+
+   # Windows
+   .\NeuralNet.exe test

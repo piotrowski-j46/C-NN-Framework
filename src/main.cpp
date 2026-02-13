@@ -30,7 +30,7 @@ std::unique_ptr<NeuralNetwork> build_mnist_network() {
     std::unique_ptr<Layer> activation_l1 = std::make_unique<ActivationLayer>(Utils::relu, Utils::relu_derivative);
     std::unique_ptr<Layer> activation_l2 = std::make_unique<ActivationLayer>(Utils::relu, Utils::relu_derivative);
     std::unique_ptr<Layer> activation_l3 = std::make_unique<SoftMaxLayer>(Matrix::softmax);
-    
+
     net->set_loss(CE);
 
     net->add_layer(dense_l1);
@@ -151,8 +151,23 @@ void test_mode() {
     std::cout << "========================================" << std::endl;
 }
 
-int main() {
+int main(const int argc, char* argv[]) {
     print_header();
-    train_mode();
-    test_mode();
+
+    if (argc < 2) {
+        std::cout << "Usage:\n";
+        std::cout << "  ./NeuralNet train   - Train model from scratch\n";
+        std::cout << "  ./NeuralNet test    - Test saved model accuracy\n";
+        return 0;
+    }
+
+    if (const std::string mode = argv[1]; mode == "train") {
+        train_mode();
+    } else if (mode == "test") {
+        test_mode();
+    } else {
+        std::cerr << "Unknown command: " << mode << std::endl;
+    }
+
+    return 0;
 }
