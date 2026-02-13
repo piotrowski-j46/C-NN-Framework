@@ -13,6 +13,9 @@ public:
 
     Matrix forward(const Matrix &input) override;
     Matrix backward(const Matrix &output_gradient, float learning_rate) override;
+    void save_weights(const std::string& directory, const std::string& filename) override{};
+    void load_weights(const std::string& directory, const std::string &filename) override{};
+    [[nodiscard]] bool has_weights() const override{return false;};
 private:
     Matrix input_cache;
     std::function<Matrix(const Matrix &)> activation_func;

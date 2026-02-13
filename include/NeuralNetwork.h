@@ -15,7 +15,9 @@ public:
 
     void add_layer(std::unique_ptr<Layer> &layer);
     void set_loss(std::unique_ptr<Loss> &loss);
-    Matrix predict(Matrix input) const;
+    [[nodiscard]] Matrix predict(Matrix input) const;
+    void save(const std::string& directory) const;
+    void load(const std::string& directory) const;
     void train(const Matrix& input, const Matrix& target_values, float learning_rate);
 private:
     std::unique_ptr<Loss> loss_function;

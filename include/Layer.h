@@ -13,6 +13,9 @@ public:
 
     virtual Matrix forward(const Matrix& input) = 0;
     virtual Matrix backward(const Matrix& output_gradient, float learning_rate) = 0;
+    virtual void save_weights(const std::string& directory, const std::string& filename);
+    virtual void load_weights(const std::string& directory, const std::string &filename);
+    [[nodiscard]] virtual bool has_weights() const = 0;
 };
 
 

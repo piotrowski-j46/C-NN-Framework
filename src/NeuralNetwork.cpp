@@ -33,9 +33,25 @@ void NeuralNetwork::train(const Matrix& input, const Matrix& target_values,const
     }
 
     Matrix grad = loss_function->compute_gradient(activation, target_values);
-
     for (auto it = layers.rbegin(); it != layers.rend(); ++it) {
         grad = (*it)->backward(grad, learning_rate);
     }
 }
+
+void NeuralNetwork::save(const std::string& directory) const {
+    for (const auto& layer : layers) {
+        layer->save_weights(directory,"layer");
+    }
+}
+
+void NeuralNetwork::load(const std::string &directory) const {
+    int counter = 1;
+    for (const auto& layer : layers) {
+        if (!layer->has_weights()) continue;
+        layer->load_weights(directory, "layer_" + std::to_string(counter));
+        ++counter;
+    }
+}
+
+
 

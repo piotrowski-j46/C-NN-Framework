@@ -47,13 +47,24 @@ Matrix DenseLayer::backward(const Matrix &output_gradient, const float learning_
     return back_grad;
 }
 
-void DenseLayer::save_weights(const std::string& filename) {
-    const  std::filesystem::path path = Utils::get_path("weights");
+void DenseLayer::save_weights(const std::string& directory, const std::string& filename) {
+    std::filesystem::path path = Utils::get_path("weights");
     if (!std::filesystem::exists(path)) {
-        std::cerr << "Weights directory not found, creating directory" << std::endl;
-        std::filesystem::create_directory("weights");
+        std::cerr << "weights directory not found, creating directory" << std::endl;
+        std::filesystem::create_directory(path);
     }
-    std::ofstream save(path/filename);
+
+    if (!std::filesystem::exists(path/directory)) {
+        std::cerr << directory << " directory not found, creating directory" << std::endl;
+        std::filesystem::create_directory(path/directory);
+    }
+    std::string temp_filename = filename + "_1";
+    int counter = 1;
+    while (std::filesystem::exists(path/directory/temp_filename)) {
+        temp_filename = filename + "_" + std::to_string(counter);
+        ++counter;
+    }
+    std::ofstream save(path/directory/temp_filename);
     save << "WEIGHTS\n";
     save << weights.get_raw_data().size() << "\n";
     for (const auto& entry : weights.get_raw_data()) {
@@ -67,12 +78,12 @@ void DenseLayer::save_weights(const std::string& filename) {
 
 }
 
-void DenseLayer::load_weights(const std::string &filename) {
+void DenseLayer::load_weights(const std::string& directory, const std::string &filename) {
 
     std::vector<float>* loc = nullptr;
     const int weights_size = weights.get_raw_data().size();
     const int bias_size = bias.get_raw_data().size();
-    const std::filesystem::path path = Utils::get_path("weights", filename);
+    const std::filesystem::path path = Utils::get_path("weights/" + directory, filename);
     const std::regex bias_reg("BIAS"), weights_reg("WEIGHTS");
     std::ifstream load(path);
     std::string buffer;
