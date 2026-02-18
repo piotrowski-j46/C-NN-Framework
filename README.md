@@ -120,7 +120,7 @@ Where:
 #### Backward Propagation
 During the backward pass, the layer computes gradients to update its parameters and passes the error signal to previous layers. 
 Given the output gradient ($\frac{\partial L}{\partial Y}$, denoted as $dY$) and learning rate $\alpha$:
-1. Gradient of Weights ($dW$):Calculated by multiplying the transposed input by the output gradient:
+1. Gradient of Weights ($dW$): Calculated by multiplying the transposed input by the output gradient:
 $$dW = X^T \cdot dY$$
 2. Gradient of Biases ($dB$): Derived by performing the column-wise sum on the output gradient:
 $$dB = \sum dY$$
@@ -141,7 +141,7 @@ It is computationally efficient and helps mitigate the vanishing gradient proble
 allowing for faster convergence during training compared to traditional 
 sigmoid/tanh functions.
 - To maximize performance and prevent the "dying ReLU" problem (where neurons permanently stop learning), 
-the framework employs He Initialization.While standard implementations often assume a Normal Distribution with
+the framework employs He Initialization. While standard implementations often assume a Normal Distribution with
 variance $\sigma^2 = \frac{2}{n}$, this framework samples weights from a Uniform Distribution.
 To maintain the same variance required for proper signal propagation, the scaling boundaries must be adjusted. 
   - Normal Distribution 
@@ -160,7 +160,7 @@ classification tasks.
 ### Softmax Layer
 The Softmax layer is typically used as the output layer for multi-class classification problems. 
 It transforms raw output scores (logits) into a probability distribution, where all values sum to 1.0.
--Numerical Stability: The implementation utilizes the Log-Sum-Exp trick (subtracting the maximum value from input vector) to
+- Numerical Stability: The implementation utilizes the Log-Sum-Exp trick (subtracting the maximum value from input vector) to
 prevent floating-point overflow/underflow and NaN propagation, ensuring stability even with large input values.
 ## Neural Network
 The NeuralNetwork class serves as the high-level container and orchestrator of the model.
